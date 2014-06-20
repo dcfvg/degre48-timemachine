@@ -13,7 +13,7 @@ module.exports = function(app, io){
   });
 
   function init(){
-    readDatabase();
+    console.log(readDatabase());
   };
 
   /*
@@ -32,29 +32,7 @@ module.exports = function(app, io){
 
     var data = [];
 
-    // glob(db+'/*/m*', {nocase: true, sync: true}, function (er, sets) {
-    //   sets.forEach(function(setPath){
-    //     var setBasename = path.basename(setPath);
-    //     var setBasenameParts = setBasename.split("-");
-        
-    //     glob(setPath+'/*/', {nocase: true, sync: true}, function (er, perfs) {
-    //       return perfs;
-
-    //       var set = {
-    //         id    : setBasenameParts[0],
-    //         date  : setBasenameParts[1],
-    //         perfs : perfs
-    //       };
-    //     });
-    //     data.push(set);
-      
-    //   });
-
-    //   console.log(data);
-    // });
     glob(db+'/*/p*-*', {nocase: true, sync: true}, function (er, perfs) {
-      console.log(perfs);
-
       perfs.forEach(function(perfPath){
 
         var setPath           = path.dirname(perfPath);
@@ -73,13 +51,16 @@ module.exports = function(app, io){
           setPosition : setPosition,
           
           perfId   : setBasenameParts[0]+"_"+perfBasenameParts[0],
-          perfPosition : perfPosition
+          perfPosition : perfPosition,
+          perfTile : perfBasenameParts[1]
         };
-        console.log(perf);
+
+        data.push(perf);
       });
     });
+    
+    return data;
   };
-
 
   init();
 };
