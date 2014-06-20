@@ -32,24 +32,54 @@ module.exports = function(app, io){
 
     var data = [];
 
-    glob(db+'/*/', {nocase: true, sync: true}, function (er, sets) {
-      sets.forEach(function(setPath) {
+    // glob(db+'/*/m*', {nocase: true, sync: true}, function (er, sets) {
+    //   sets.forEach(function(setPath){
+    //     var setBasename = path.basename(setPath);
+    //     var setBasenameParts = setBasename.split("-");
+        
+    //     glob(setPath+'/*/', {nocase: true, sync: true}, function (er, perfs) {
+    //       return perfs;
 
-        var setBasename = path.basename(setPath);
-        var setBasenameParts = setBasename.split("-");
+    //       var set = {
+    //         id    : setBasenameParts[0],
+    //         date  : setBasenameParts[1],
+    //         perfs : perfs
+    //       };
+    //     });
+    //     data.push(set);
+      
+    //   });
 
-        var set = {
-          id    : setBasenameParts[0],
-          date  : setBasenameParts[1]
+    //   console.log(data);
+    // });
+    glob(db+'/*/p*-*', {nocase: true, sync: true}, function (er, perfs) {
+      console.log(perfs);
+
+      perfs.forEach(function(perfPath){
+
+        var setPath           = path.dirname(perfPath);
+        var setBasename       = path.basename(setPath);
+        var setBasenameParts  = setBasename.split("-");
+        var setPosition       = parseInt(setBasenameParts[0].replace("s", "")) - 1;
+
+        var perfBasename      = path.basename(perfPath);
+        var perfBasenameParts = perfBasename.split("-");
+        var perfPosition      = parseInt(perfBasenameParts[0].replace("p", "")) -1;
+
+
+        var perf = {
+          setId    : setBasenameParts[0],
+          setDate  : setBasenameParts[1],
+          setPosition : setPosition,
+          
+          perfId   : setBasenameParts[0]+"_"+perfBasenameParts[0],
+          perfPosition : perfPosition
         };
-
-        data.push(set);
-
+        console.log(perf);
       });
-
-      console.log(data);
     });
-
   };
+
+
   init();
 };
