@@ -16,6 +16,6 @@ module.exports = function(app,io,m){
 
   // GET
   function getIndex(req, res) {
-    res.render("index", {title : "48"});
+    res.render("index", {title : "48", perfs:m.readDatabase()});
   };
 };

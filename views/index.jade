@@ -4,8 +4,27 @@ html
     link(rel='stylesheet', href='/css/style.css')
     title #{title}
   body
-    header.page-header
-      h1 #{title}
+    div.container-fluid
+      header.page-header
+        h1 #{title}
+      div.perfs
+      each perf in perfs
+        div.perf.row
+          h4.col-md-3 #{perf.title}
+          p.col-md-1 #{perf.setId}
+          p.col-md-1 #{perf.setDate}
+          p.col-md-1
+            if perf.versoIcon
+              img(src='#{perf.versoIcon}') 
+          p.col-md-1
+            span.label.label-success #{perf.versoCount}
+
+
+          P.col-md-2
+          //-each verso in perf.versos 
+            if user 
+            img(src='#{verso.thumb}' width='100%').col-md-1
+
 
     //- scripts
     script(src='/js/socket.io.min.js')

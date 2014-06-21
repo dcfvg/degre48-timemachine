@@ -5,6 +5,7 @@
     "socket.io": "*",
     "underscore": "*",
     "glob" :"*",
-    "gm" :"*"
+    "gm" :"*",
+    "mkdirp" : "*"
   }
 }
