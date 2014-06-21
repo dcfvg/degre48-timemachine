@@ -4,27 +4,33 @@ html
     link(rel='stylesheet', href='/css/style.css')
     title #{title}
   body
-    div.container-fluid
+    div.container
       header.page-header
         h1 #{title}
       div.perfs
-      each perf in perfs
-        div.perf.row
-          h4.col-md-3 #{perf.title}
-          p.col-md-1 #{perf.setId}
-          p.col-md-1 #{perf.setDate}
-          p.col-md-1
-            if perf.versoIcon
-              img(src='#{perf.versoIcon}') 
-          p.col-md-1
-            span.label.label-success #{perf.versoCount}
+        div.row
+          each perf in perfs
+            div.col-md-4
+              h2 #{perf.title}
+              h5 #{perf.setId}, #{perf.setDate}
 
+            div.col-md-8
+              div.row
+                span.label.label-success.col-md-4 versos — #{perf.versoCount} 
+                span.label.label-primary.col-md-4 rectos — #{perf.rectoCount}
+                span.label.label-info.col-md-2 predoc — #{perf.predocCount}
+                span.label.label-info.col-md-2 sources
 
-          P.col-md-2
-          //-each verso in perf.versos 
-            if user 
-            img(src='#{verso.thumb}' width='100%').col-md-1
-
+              div.row
+                if perf.rectoIcon
+                  img(src='#{perf.rectoIcon}').col-md-4
+                if perf.versoIcon
+                  img(src='#{perf.versoIcon}').col-md-4
+                if perf.predocIcon
+                  img(src='#{perf.predocIcon}').col-md-2
+                p.col-md-2
+                  each source in perf.sourceType
+                    li #{source}
 
     //- scripts
     script(src='/js/socket.io.min.js')

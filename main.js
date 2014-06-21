@@ -15,7 +15,7 @@ module.exports = function(app, io){
   });
 
   function init(){
-    //genPdfTumbs("/Users/benoit/Dropbox/g-degre48_archives/soirees/s01-130426/p1-ACW");
+   // refreshThumbs();
   };
 
   /*
@@ -37,8 +37,6 @@ module.exports = function(app, io){
 
     glob.sync(db+'/*/p*-*', {nocase: true}).forEach(function(perfPath){
 
-        genPdfTumbs(perfPath);
-
         var setPath           = path.dirname(perfPath);
         var setBasename       = path.basename(setPath);
         var setBasenameParts  = setBasename.split("-");
@@ -48,38 +46,41 @@ module.exports = function(app, io){
         var perfBasenameParts = perfBasename.split("-");
         var perfPosition      = parseInt(perfBasenameParts[0].replace("p", "")) -1;
 
+        var versos  = getItemsList(perfPath+"/*verso*/*.pdf");
+        var rectos  = getItemsList(perfPath+"/*recto*/*.pdf");
+        var predocs = getItemsList(perfPath+"/*pre-doc*/*.*");
 
-        var versos = []
-        var versoIcon = false
 
-        glob.sync(perfPath+"/*versos/*.pdf").forEach(function (versoPath) {
-      
+        var sourceType = []
 
-          var verso = {
-            filename : path.basename(versoPath),
-            thumb : genThumb(versoPath)
-          };
-
-          versos.push(verso);
-          
+        glob.sync(perfPath+"/*source*/*/").forEach(function (source) {
+          sourceType.push(path.basename(source));
         });
 
-
-
         var perf = {
-          setPath  : setPath,
-          setId    : setBasenameParts[0],
-          setDate  : setBasenameParts[1],
-          setPosition : setPosition,
+           setPath       : setPath
+          ,setId         : setBasenameParts[0]
+          ,setDate       : setBasenameParts[1]
+          ,setPosition   : setPosition
           
-          perfPath : perfPath,
-          id   : setBasenameParts[0]+"_"+perfBasenameParts[0],
-          position : perfPosition,
-          title : perfBasenameParts[1],
+          ,perfPath      : perfPath
+          ,id            : setBasenameParts[0]+"_"+perfBasenameParts[0]
+          ,position      : perfPosition
+          ,title         : perfBasenameParts[1]
 
-          versos : versos,
-          versoIcon : versoIcon,
-          versoCount : versos.length
+          ,versos        : versos
+          ,versoIcon     : getRandItem(versos).thumb
+          ,versoCount    : versos.length
+
+          ,rectos        : rectos
+          ,rectoIcon     : getRandItem(rectos).thumb
+          ,rectoCount    : rectos.length
+
+          ,predocs        : predocs
+          ,predocIcon     : getRandItem(predocs).thumb
+          ,predocCount    : predocs.length
+
+          ,sourceType    : sourceType
         };
 
         data.push(perf);
@@ -88,6 +89,28 @@ module.exports = function(app, io){
     //console.log(data);
     return data;
   };
+
+  function getRandItem(array){
+    var item = false;
+    if(array.length > 0) item = array[Math.floor(Math.random()*array.length)];
+
+    return item
+  }
+  function getItemsList(patern, ext){
+
+    var items = [];
+
+    glob.sync(patern).forEach(function (itemPath) {
+
+      var item = {
+        filename : path.basename(itemPath),
+        thumb : genThumb(itemPath)
+      };
+
+      items.push(item);
+    });
+    return items;
+  }
   function genThumb(orginPath){
 
     var thumb = (__dirname + thumbsPath+orginPath+".jpg").replace(db,"");
@@ -107,26 +130,6 @@ module.exports = function(app, io){
     };
     return thumb.replace(__dirname,"").replace('/public',"");
   }
-  function genPdfTumbs(perfPath){
-    //console.log(perfPath);
 
-    glob(perfPath+'/*versos/*.pdf', {nocase: true, sync: true}, function (er, pdfs) {
-      pdfs.forEach(function(pdf){
-        
-        var thumbPath = (__dirname + thumbsPath+pdf+".jpg").replace(db,"");
-
-        if (! fs.existsSync(thumbPath)){
-          mkdirp(path.dirname(thumbPath), function (err) {
-              console.log(pdf,"->",thumbPath);
-              gm(pdf)
-              .resize(350,350)
-              .write(thumbPath, function (err) { 
-                if (err) console.error("stop",err);
-              });
-          });
-        };        
-      });
-    });
-  }
   init();
 };
