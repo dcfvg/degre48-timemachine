@@ -126,7 +126,6 @@ module.exports = function(app, io){
   };
 
   function renderNextThumb(){
-    console.log("rendering from", thumbCurrentRender, "on", thumbList.length);
 
     thumbCurrentRender++;
 
@@ -166,24 +165,24 @@ module.exports = function(app, io){
 
       var item = {
         filename : path.basename(itemPath),
-        thumb : genThumbPath(itemPath)
+        thumb : genThumbUrl(itemPath)
       };
 
       items.push(item);
     });
     return items;
   };
-  function genThumbPath(orginPath){
-    return (__dirname + thumbsPath+orginPath+".jpg").replace(db,"")
+  function genThumbUrl(orginPath){
+    return (__dirname + thumbsPath+orginPath+".jpg").replace(db,"").replace(__dirname,"").replace('/public',"");
   };
   function genThumb(orginPath){
 
-    var thumb = genThumbPath(orginPath);
+    var thumb = (__dirname + thumbsPath+orginPath+".jpg").replace(db,"");
 
     if (! fs.existsSync(thumb)){
 
       mkdirp(path.dirname(thumb), function (err) {
-          console.log(path.basename(orginPath),"->",path.basename(thumb));
+          console.log(thumbCurrentRender,'/', thumbList.length, path.basename(orginPath),"->",path.basename(thumb));
           
           gm(orginPath)
           .resize(450,450)

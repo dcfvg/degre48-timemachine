@@ -13,9 +13,9 @@ html
               div.col-md-3
                 h2 #{perf.title}
                 h5 
-                  span.label.label-primary #{perf.setId}
+                  a(href="/sets##{perf.setId}").label.label-primary #{perf.setId}
                   | 
-                  span.label.label-default #{perf.setDate}
+                  a(href="/sets##{perf.setId}").label.label-default #{perf.setDate}
 
                 ul
                   each source in perf.sourceType

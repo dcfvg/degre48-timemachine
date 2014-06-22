@@ -8,7 +8,7 @@ html
         h1 #{title}
         div.perfs
           each set in sets
-            hr
+            hr(id='#{set.setId}')
             h1
               span.label.label-primary #{set.setId} — #{set.setDate}
             hr
