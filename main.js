@@ -13,16 +13,11 @@ var thumbsPath = "/public/thumbs/"
 module.exports = function(app, io){
   console.log("main module initialized");
 
-  var thumbList = _.union(
-    glob.sync(db+'/*/*/*verso*/*.pdf'),
-    glob.sync(db+'/*/*/*recto*/*.pd'),
-    glob.sync(db+'/*/*/*pre-doc*/*.*'),
-    glob.sync(db+'/*/*documentation*/*.*'),
-    glob.sync(db+'/*/*dispositif*/*.*')
-  );
+  var thumbList;
   var thumbCurrentRender = 0;
 
   function init(){
+    refreshTumbList()
     renderNextThumb();
   };
 
@@ -137,7 +132,20 @@ module.exports = function(app, io){
 
     if(thumbCurrentRender < thumbList.length){
       genThumb(thumbList[thumbCurrentRender]);
+    }else{
+      refreshTumbList();
+      console.log('next thumbs scan in 30 sec.')
+      setTimeout(renderNextThumb, 30000);
     };
+  }
+  function refreshTumbList(){
+    thumbList = _.union(
+        glob.sync(db+'/*/*/*verso*/*.pdf'),
+        glob.sync(db+'/*/*/*recto*/*.pd'),
+        glob.sync(db+'/*/*/*pre-doc*/*.*'),
+        glob.sync(db+'/*/*documentation*/*.*'),
+        glob.sync(db+'/*/*dispositif*/*.*')
+    );
   }
   function parseDate(str){
     //var date = new Date(str.substr(4,2), str.substr(2,2), str.substr(0,2), 0, 0, 0 );
@@ -158,16 +166,19 @@ module.exports = function(app, io){
 
       var item = {
         filename : path.basename(itemPath),
-        thumb : genThumb(itemPath)
+        thumb : genThumbPath(itemPath)
       };
 
       items.push(item);
     });
     return items;
   };
+  function genThumbPath(orginPath){
+    return (__dirname + thumbsPath+orginPath+".jpg").replace(db,"")
+  };
   function genThumb(orginPath){
 
-    var thumb = (__dirname + thumbsPath+orginPath+".jpg").replace(db,"");
+    var thumb = genThumbPath(orginPath);
 
     if (! fs.existsSync(thumb)){
 
