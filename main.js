@@ -121,7 +121,7 @@ module.exports = function(app, io){
           console.log(orginPath,"->",thumb);
           
           gm(orginPath)
-          .resize(200,200)
+          .resize(350,350)
           .write(thumb, function (err) { 
             if (err) console.error("stop",err);
           });

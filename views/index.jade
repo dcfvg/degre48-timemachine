@@ -8,27 +8,30 @@ html
       header.page-header
         h1 #{title}
       div.perfs
-        div.row
+        div.row 
           each perf in perfs
             div.col-md-4
               h2 #{perf.title}
               h5 #{perf.setId}, #{perf.setDate}
 
-            div.col-md-8
-              div.row
-                span.label.label-success.col-md-4 versos — #{perf.versoCount} 
-                span.label.label-primary.col-md-4 rectos — #{perf.rectoCount}
-                span.label.label-info.col-md-2 predoc — #{perf.predocCount}
-                span.label.label-info.col-md-2 sources
+            div.col-md-8.perf
+                p.col-md-4
+                  span.label.label-success V #{perf.versoCount}
+                  if perf.versoIcon
+                    img(src='#{perf.versoIcon}')
 
-              div.row
-                if perf.rectoIcon
-                  img(src='#{perf.rectoIcon}').col-md-4
-                if perf.versoIcon
-                  img(src='#{perf.versoIcon}').col-md-4
-                if perf.predocIcon
-                  img(src='#{perf.predocIcon}').col-md-2
+                p.col-md-4
+                  span.label.label-primary R #{perf.rectoCount}
+                  if perf.rectoIcon
+                  img(src='#{perf.rectoIcon}')
+
                 p.col-md-2
+                  span.label.label-info Pre-doc #{perf.predocCount}
+                  if perf.predocIcon
+                  img(src='#{perf.predocIcon}' width='100%')
+
+                p.col-md-2
+                  span.label.label-info Sources #{perf.versoCount}
                   each source in perf.sourceType
                     li #{source}
 

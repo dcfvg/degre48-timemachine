@@ -6155,3 +6155,6 @@ button.close {
 body .col-md-1 img {
   width: 100%;
 }
+body .perf {
+  text-align: center;
+}
