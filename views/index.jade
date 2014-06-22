@@ -8,32 +8,43 @@ html
       header.page-header
         h1 #{title}
       div.perfs
-        div.row 
           each perf in perfs
-            div.col-md-4
-              h2 #{perf.title}
-              h5 #{perf.setId}, #{perf.setDate}
+            div.row 
+              div.col-md-3
+                h2 #{perf.title}
+                h5 
+                  span.label.label-primary #{perf.setId}
+                  | 
+                  span.label.label-default #{perf.setDate}
 
-            div.col-md-8.perf
-                p.col-md-4
-                  span.label.label-success V #{perf.versoCount}
-                  if perf.versoIcon
-                    img(src='#{perf.versoIcon}')
-
-                p.col-md-4
-                  span.label.label-primary R #{perf.rectoCount}
-                  if perf.rectoIcon
-                  img(src='#{perf.rectoIcon}')
-
-                p.col-md-2
-                  span.label.label-info Pre-doc #{perf.predocCount}
-                  if perf.predocIcon
-                  img(src='#{perf.predocIcon}' width='100%')
-
-                p.col-md-2
-                  span.label.label-info Sources #{perf.versoCount}
+                ul
                   each source in perf.sourceType
                     li #{source}
+
+              div.col-md-3.previewZone
+                ol.stack
+                  each verso in perf.versos
+                    li(src="#{verso.thumb}")
+                span.label.label-success #{perf.versoCount}
+                input(type="range" min="1" max="#{perf.versoCount}" step="1" value="1")
+                img.preview(src='#{perf.versoIcon}')
+
+              div.col-md-3.previewZone
+                ol.stack
+                  each verso in perf.rectos
+                    li(src="#{verso.thumb}")
+                span.label.label-success #{perf.rectoCount}
+                input(type="range" min="1" max="#{perf.rectoCount}" step="1" value="1")
+                img.preview(src='#{perf.rectoIcon}')
+
+              div.col-md-2.previewZone
+                ol.stack
+                  each verso in perf.predocs
+                    li(src="#{verso.thumb}")
+                span.label.label-success #{perf.predocCount}
+                input(type="range" min="1" max="#{perf.predocCount}" step="1" value="1")
+                img.preview(src='#{perf.predocIcon}')
+
 
     //- scripts
     script(src='/js/socket.io.min.js')

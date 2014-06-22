@@ -6152,9 +6152,15 @@ button.close {
     display: none !important;
   }
 }
-body .col-md-1 img {
-  width: 100%;
-}
 body .perf {
   text-align: center;
+}
+body .stack {
+  display: none;
+}
+body .stack input[type="range"] {
+  width: 100%;
+}
+body .preview {
+  width: 100%;
 }
