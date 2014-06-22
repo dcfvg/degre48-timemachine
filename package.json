@@ -6,6 +6,7 @@
     "underscore": "*",
     "glob" :"*",
     "gm" :"*",
-    "mkdirp" : "*"
+    "mkdirp" : "*",
+    "markdown" : "*"
   }
 }

@@ -3,6 +3,9 @@ var glob = require("glob");
 var path = require("path");
 var gm = require('gm');
 var mkdirp = require('mkdirp');
+var markdown = require( "markdown" ).markdown;
+var _ = require("underscore");
+
 
 var db = "/Users/benoit/Dropbox/g-degre48_archives/soirees";
 var thumbsPath = "/public/thumbs/"
@@ -10,32 +13,25 @@ var thumbsPath = "/public/thumbs/"
 module.exports = function(app, io){
   console.log("main module initialized");
 
-  io.on("connection", function(socket){
-    socket.on("capture", onCapture);
-  });
+  var thumbList = _.union(
+    glob.sync(db+'/*/*/*verso*/*.pdf'),
+    glob.sync(db+'/*/*/*recto*/*.pd'),
+    glob.sync(db+'/*/*/*pre-doc*/*.*'),
+    glob.sync(db+'/*/*documentation*/*.*'),
+    glob.sync(db+'/*/*dispositif*/*.*')
+  );
+  var thumbCurrentRender = 0;
 
   function init(){
-   // refreshThumbs();
+    renderNextThumb();
   };
 
-  /*
+  this.readPerfs = function(){return readPerfs();};
+  function readPerfs(){
 
-  sets 
-    performance
+    var perfs = [];
 
-
-
-
-  */
-
-  this.readDatabase = function(){return readDatabase();};
-
-  function readDatabase(){
-
-    var data = [];
-    var pouf;
-
-    glob.sync(db+'/*/p*-*', {nocase: true}).forEach(function(perfPath){
+    glob.sync(db+'/*/p*-*').forEach(function(perfPath){
 
         var setPath           = path.dirname(perfPath);
         var setBasename       = path.basename(setPath);
@@ -60,7 +56,7 @@ module.exports = function(app, io){
         var perf = {
            setPath       : setPath
           ,setId         : setBasenameParts[0]
-          ,setDate       : setBasenameParts[1]
+          ,setDate       : parseDate(setBasenameParts[1])
           ,setPosition   : setPosition
           
           ,perfPath      : perfPath
@@ -83,19 +79,77 @@ module.exports = function(app, io){
           ,sourceType    : sourceType
         };
 
-        data.push(perf);
+        perfs.push(perf);
     });
     
-    //console.log(data);
-    return data;
+    //console.log(perfs);
+    return perfs;
+  };
+  this.readSets = function(){return readSets();};
+  function readSets(){
+
+    var sets = [];
+
+    glob.sync(db+'/s*-*').forEach(function(setPath){
+      
+        var setBasename       = path.basename(setPath);
+        var setBasenameParts  = setBasename.split("-");
+        var setPosition       = parseInt(setBasenameParts[0].replace("s", "")) - 1;
+
+        var docs              = getItemsList(setPath+"/*documentation*/*.*");
+        var dispositifs       = getItemsList(setPath+"/*dispositif*/*.*");
+
+        
+        var readmeMd = fs.readFileSync(setPath + "/dispositif/degre48/README.md", 'utf8');
+        var readme   = {
+          html              : markdown.toHTML(readmeMd),
+          md                : readmeMd 
+        };
+
+        var set = {
+           setPath          : setPath
+          ,setId            : setBasenameParts[0]
+          ,setDate          : parseDate(setBasenameParts[1])
+          ,setPosition      : setPosition
+
+          ,docs             : docs
+          ,docIcon          : getRandItem(docs).thumb
+          ,docCount         : docs.length
+
+          ,dispositifs      : dispositifs
+          ,dispositifIcon   : getRandItem(dispositifs).thumb
+          ,dispositifCount  : dispositifs.length
+
+          ,readme           : readme
+
+        };
+
+        sets.push(set);
+    });
+
+    return sets;
   };
 
+  function renderNextThumb(){
+    console.log("rendering from", thumbCurrentRender, "on", thumbList.length);
+
+    thumbCurrentRender++;
+
+    if(thumbCurrentRender < thumbList.length){
+      genThumb(thumbList[thumbCurrentRender]);
+    };
+  }
+  function parseDate(str){
+    //var date = new Date(str.substr(4,2), str.substr(2,2), str.substr(0,2), 0, 0, 0 );
+    var date = str.substr(4,2)+'/'+str.substr(2,2)+'/'+str.substr(0,2);
+    return date;
+  }
   function getRandItem(array){
     var item = false;
     if(array.length > 0) item = array[Math.floor(Math.random()*array.length)];
 
     return item
-  }
+  };
   function getItemsList(patern, ext){
 
     var items = [];
@@ -110,7 +164,7 @@ module.exports = function(app, io){
       items.push(item);
     });
     return items;
-  }
+  };
   function genThumb(orginPath){
 
     var thumb = (__dirname + thumbsPath+orginPath+".jpg").replace(db,"");
@@ -118,18 +172,21 @@ module.exports = function(app, io){
     if (! fs.existsSync(thumb)){
 
       mkdirp(path.dirname(thumb), function (err) {
-          console.log(orginPath,"->",thumb);
+          console.log(path.basename(orginPath),"->",path.basename(thumb));
           
           gm(orginPath)
-          .resize(350,350)
+          .resize(450,450)
+          .autoOrient()
           .write(thumb, function (err) { 
             if (err) console.error("stop",err);
+            renderNextThumb();
           });
 
       });
+    }else{
+      renderNextThumb();
     };
     return thumb.replace(__dirname,"").replace('/public',"");
-  }
-
+  };
   init();
 };

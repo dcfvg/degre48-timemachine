@@ -3,10 +3,13 @@ $(function() {
 	console.log("go !");
 
 	var st = 0, sd = 0, step = 10, change_pic = false;
-
-	$('.previewZone input[type="range"]').on('mousemove', onRangeChange);
+	
 	$('.stack li:first-child').addClass('on');
-	$('.stack .on')
+
+	$('.previewZone input[type="range"]')
+		//.each(onRangeChange)
+		.on('mousemove', onRangeChange);
+	
 
 	function onRangeChange() {
 
