@@ -1,5 +1,5 @@
 var fs = require('fs');
-var glob = require("glob");
+var glob = require("glob-all");
 var path = require("path");
 var gm = require('gm');
 var mkdirp = require('mkdirp');
@@ -37,9 +37,9 @@ module.exports = function(app, io){
         var perfBasenameParts = perfBasename.split("-");
         var perfPosition      = parseInt(perfBasenameParts[0].replace("p", "")) -1;
 
-        var versos  = getItemsList(perfPath+"/*verso*/*.pdf");
-        var rectos  = getItemsList(perfPath+"/*recto*/*.pdf");
-        var predocs = getItemsList(perfPath+"/*pre-doc*/*.*");
+        var versos  = getItemsList(perfPath+"/*verso*/","*.pdf");
+        var rectos  = getItemsList(perfPath+"/*recto*/","*.pdf");
+        var predocs = getItemsList(perfPath+"/*pre-doc*/","*.*");
 
 
         var sourceType = []
@@ -91,8 +91,8 @@ module.exports = function(app, io){
         var setBasenameParts  = setBasename.split("-");
         var setPosition       = parseInt(setBasenameParts[0].replace("s", "")) - 1;
 
-        var docs              = getItemsList(setPath+"/*documentation*/*.*");
-        var dispositifs       = getItemsList(setPath+"/*dispositif*/*.*");
+        var docs              = getItemsList(setPath+"/*documentation*/","*.*");
+        var dispositifs       = getItemsList(setPath+"/*dispositif*/","*.*");
 
         
         var readmeMd = fs.readFileSync(setPath + "/dispositif/degre48/README.md", 'utf8');
@@ -138,13 +138,15 @@ module.exports = function(app, io){
     };
   }
   function refreshTumbList(){
-    thumbList = _.union(
-        glob.sync(db+'/*/*/*verso*/*.pdf'),
-        glob.sync(db+'/*/*/*recto*/*.pd'),
-        glob.sync(db+'/*/*/*pre-doc*/*.*'),
-        glob.sync(db+'/*/*documentation*/*.*'),
-        glob.sync(db+'/*/*dispositif*/*.*')
-    );
+    thumbList = glob.sync([
+       db+'/*/*/*verso*/*.pdf'
+      ,db+'/*/*/*recto*/*.pdf'
+      ,db+'/*/*/*pre-doc*/*.*'
+      ,db+'/*/*documentation*/*.*'
+      ,db+'/*/*dispositif*/*.*'
+    ]);
+
+    console.log('file', thumbList.length)
   }
   function parseDate(str){
     //var date = new Date(str.substr(4,2), str.substr(2,2), str.substr(0,2), 0, 0, 0 );
@@ -157,11 +159,20 @@ module.exports = function(app, io){
 
     return item
   };
-  function getItemsList(patern, ext){
+  function getItemsList(searchPath, patern){
 
     var items = [];
-
-    glob.sync(patern).forEach(function (itemPath) {
+    glob.sync([
+           searchPath+'/'+patern
+      ,'!'+searchPath+'/*.doc*'
+      ,'!'+searchPath+'/*.indd'
+      ,'!'+searchPath+'/*.rtf'
+      ,'!'+searchPath+'/*.mp3'
+      ,'!'+searchPath+'/*.rtf'
+      ,'!'+searchPath+'/*.textClipping'
+    ])
+    .forEach(function (itemPath) {
+      console.log(itemPath);
 
       var item = {
         filename : path.basename(itemPath),
