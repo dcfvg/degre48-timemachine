@@ -168,12 +168,9 @@ module.exports = function(app, io){
       ,'!'+searchPath+'/*.indd'
       ,'!'+searchPath+'/*.rtf'
       ,'!'+searchPath+'/*.mp3'
-      ,'!'+searchPath+'/*.rtf'
-      ,'!'+searchPath+'/*.textClipping'
+      ,'!'+searchPath+'/*.*Clipping*'
     ])
     .forEach(function (itemPath) {
-      console.log(itemPath);
-
       var item = {
         filename : path.basename(itemPath),
         thumb : genThumbUrl(itemPath)
@@ -196,7 +193,7 @@ module.exports = function(app, io){
           console.log(thumbCurrentRender,'/', thumbList.length, path.basename(orginPath),"->",path.basename(thumb));
           
           gm(orginPath)
-          .resize(450,450)
+          .resize(500,500)
           .autoOrient()
           .write(thumb, function (err) { 
             if (err) console.error("stop",err);
