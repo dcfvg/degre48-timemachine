@@ -1,16 +1,16 @@
-var fs = require('fs');
-var glob = require("glob-all");
-var path = require("path");
-var gm = require('gm');
-var mkdirp = require('mkdirp');
+var fs       = require('fs');
+var glob     = require("glob-all");
+var path     = require("path");
+var gm       = require('gm');
+var mkdirp   = require('mkdirp');
 var markdown = require( "markdown" ).markdown;
-var _ = require("underscore");
+var _        = require("underscore");
 
-
-var db = "/Users/benoit/Dropbox/g-degre48_archives/soirees";
+var db         = "/Users/benoit/Dropbox/g-degre48_archives/soirees";
 var thumbsPath = "/public/thumbs/"
 
 module.exports = function(app, io){
+  
   console.log("main module initialized");
 
   var thumbList;
@@ -136,7 +136,7 @@ module.exports = function(app, io){
       console.log('next thumbs scan in 30 sec.')
       setTimeout(renderNextThumb, 30000);
     };
-  }
+  };
   function refreshTumbList(){
     thumbList = glob.sync([
        db+'/*/*/*verso*/*.pdf'
@@ -149,7 +149,7 @@ module.exports = function(app, io){
     ]);
 
     console.log('file', thumbList.length)
-  }
+  };
   function parseDate(str){
     //var date = new Date(str.substr(4,2), str.substr(2,2), str.substr(0,2), 0, 0, 0 );
     var date = str.substr(4,2)+'/'+str.substr(2,2)+'/'+str.substr(0,2);
