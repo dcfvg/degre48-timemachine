@@ -1,0 +1,40 @@
+digraph {	
+	label="Arborescence / achitecture de contenus D48"
+	nodesep=1
+	rankdir="LR"
+	
+	fontname="myriadpro"
+	node[fontname="myriadpro"]
+	edge[fontname="monaco", fontsize=9, style="filled", color=blue, fontcolor=blue]
+
+	subgraph dir {
+		node[shape="folder"]
+		dispositif, degre48_git, documentation, performance, animation,
+		 pre_doc, recto, verso, offset 
+	}
+	subgraph file {
+		node[shape="note"]
+		README, screenshot, webcam, scanner, photo_mobile, 
+		lettrage, dessin, photos, fusion
+	}
+	
+	subgraph cluster_sets {
+		label="soirée"
+		
+		dispositif -> degre48_git -> README
+		dispositif -> documentation
+		animation -> fusion
+		photos 
+		
+		subgraph cluster_perf {
+			label="performance(s)"
+			
+			performance -> { sources, photos, pre_doc, recto, verso, offset }
+			sources -> { 
+				screenshot, webcam, scanner, photo_mobile, lettrage, dessin
+			}
+			photos
+			
+		}		
+	}
+}

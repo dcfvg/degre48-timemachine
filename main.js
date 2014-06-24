@@ -144,6 +144,8 @@ module.exports = function(app, io){
       ,db+'/*/*/*pre-doc*/*.*'
       ,db+'/*/*documentation*/*.*'
       ,db+'/*/*dispositif*/*.*'
+      ,db+'/*/*photos*/*.*'
+      ,db+'/*/*photos*/*/*.*'
     ]);
 
     console.log('file', thumbList.length)
