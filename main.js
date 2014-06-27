@@ -26,7 +26,7 @@ module.exports = function(app, io){
 
     var perfs = [];
 
-    glob.sync(db+'/*/p*-*').forEach(function(perfPath){
+    glob.sync(db+'/*/perf*-*').forEach(function(perfPath){
 
         var setPath           = path.dirname(perfPath);
         var setBasename       = path.basename(setPath);
@@ -40,6 +40,7 @@ module.exports = function(app, io){
         var versos  = getItemsList(perfPath+"/*verso*/","*.pdf");
         var rectos  = getItemsList(perfPath+"/*recto*/","*.pdf");
         var predocs = getItemsList(perfPath+"/*pre-doc*/","*.*");
+        var photos = getItemsList(perfPath+"/photos*/","*.*");
 
 
         var sourceType = []
@@ -70,6 +71,10 @@ module.exports = function(app, io){
           ,predocs        : predocs
           ,predocIcon     : getRandItem(predocs).thumb
           ,predocCount    : predocs.length
+
+          ,photos        : photos
+          ,photoIcon     : getRandItem(photos).thumb
+          ,photoCount    : photos.length
 
           ,sourceType    : sourceType
         };
@@ -124,7 +129,6 @@ module.exports = function(app, io){
 
     return sets;
   };
-
   function renderNextThumb(){
 
     thumbCurrentRender++;
