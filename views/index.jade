@@ -39,8 +39,8 @@ html
 
               div.col-md-2.previewZone
                 ol.stack
-                  each verso in perf.predocs
-                    li(src="#{verso.thumb}")
+                  each predoc in perf.predocs
+                    li(src="#{predoc.thumb}")
                 span.label.label-success #{perf.predocCount}
                 input(type="range" min="1" max="#{perf.predocCount}" step="1" value="1")
                 img.preview(src='#{perf.predocIcon}')
