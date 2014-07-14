@@ -6164,3 +6164,6 @@ body .stack input[type="range"] {
 body .preview {
   width: 100%;
 }
+#sets .row {
+  min-height: 100%;
+}
