@@ -40,7 +40,6 @@ module.exports = function(app, io){
         var versos  = getItemsList(perfPath+"/*verso*/","*.pdf");
         var rectos  = getItemsList(perfPath+"/*recto*/","*.pdf");
         var predocs = getItemsList(perfPath+"/*pre-doc*/","*.*");
-        var photos = getItemsList(perfPath+"/photos*/","*.*");
 
 
         var sourceType = []
@@ -72,10 +71,6 @@ module.exports = function(app, io){
           ,predocIcon     : getRandItem(predocs).thumb
           ,predocCount    : predocs.length
 
-          ,photos        : photos
-          ,photoIcon     : getRandItem(photos).thumb
-          ,photoCount    : photos.length
-
           ,sourceType    : sourceType
         };
 
@@ -89,15 +84,16 @@ module.exports = function(app, io){
   function readSets(){
 
     var sets = [];
-
+    
     glob.sync(db+'/s*-*').forEach(function(setPath){
-      
+        
         var setBasename       = path.basename(setPath);
         var setBasenameParts  = setBasename.split("-");
         var setPosition       = parseInt(setBasenameParts[0].replace("s", "")) - 1;
 
         var docs              = getItemsList(setPath+"/*documentation*/","*.*");
         var dispositifs       = getItemsList(setPath+"/*dispositif*/","*.*");
+        var photos            = getItemsList(setPath+"/photos*/","*.*");
 
         
         var readmeMd = fs.readFileSync(setPath + "/dispositif/degre48/README.md", 'utf8');
@@ -119,6 +115,10 @@ module.exports = function(app, io){
           ,dispositifs      : dispositifs
           ,dispositifIcon   : getRandItem(dispositifs).thumb
           ,dispositifCount  : dispositifs.length
+
+          ,photos           : photos
+          ,photoIcon        : getRandItem(photos).thumb
+          ,photoCount       : photos.length
 
           ,readme           : readme
 

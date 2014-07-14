@@ -3,7 +3,7 @@ html
     link(rel='stylesheet', href='/css/style.css')
     title #{title}
   body
-    div.container
+    div.container-fluid
       header.page-header
         h1 #{title}
         div.perfs
@@ -15,24 +15,32 @@ html
             
             div.row
 
-              div.col-md-3
+              div.col-md-4
+                div.previewZone
+                  ol.stack
+                    each doc in set.docs
+                      li(src="#{doc.thumb}")
+                  span.label.label-success #{set.docCount}
+                  input(type="range" min="1" max="#{set.docCount}" step="1" value="1")
+                  img.preview(src='#{set.docIcon}')
                 p.readme !{set.readme.html}
 
-              div.col-md-4.previewZone
-                ol.stack
-                  each doc in set.docs
-                    li(src="#{doc.thumb}")
-                span.label.label-success #{set.docCount}
-                input(type="range" min="1" max="#{set.docCount}" step="1" value="1")
-                img.preview(src='#{set.docIcon}')
 
-              div.col-md-5.previewZone
+              div.col-md-4.previewZone
                 ol.stack
                   each dispositif in set.dispositifs
                     li(src="#{dispositif.thumb}")
                 span.label.label-success #{set.dispositifCount}
                 input(type="range" min="1" max="#{set.dispositifCount}" step="1" value="1")
                 img.preview(src='#{set.dispositifIcon}')
+
+              div.col-md-4.previewZone
+                ol.stack
+                  each photo in set.photos
+                    li(src="#{photo.thumb}")
+                span.label.label-success #{set.photoCount}
+                input(type="range" min="1" max="#{set.photoCount}" step="1" value="1")
+                img.preview(src='#{set.photoIcon}')
 
     //- scripts
     script(src='/js/socket.io.min.js')
