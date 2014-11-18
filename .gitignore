@@ -24,3 +24,5 @@
 *btsync*
 
 *.tmproj
+
+/osc_interface.touchosc

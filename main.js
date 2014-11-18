@@ -17,7 +17,7 @@ module.exports = function(app, io){
   var thumbCurrentRender = 0;
 
   function init(){
-    refreshTumbList()
+    refreshTumbList();
     renderNextThumb();
   };
 
