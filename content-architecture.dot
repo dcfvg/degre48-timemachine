@@ -8,14 +8,15 @@ digraph {
 	edge[fontname="monaco", fontsize=9, style="filled", color=blue, fontcolor=blue]
 
 	subgraph dir {
-		node[shape="folder"]
+		node[shape="folder", color=black, style="filled", fontcolor=white]
+
 		dispositif, degre48_git, documentation, performance, animation,
-		 pre_doc, recto, verso, offset 
+		 pre_doc, recto, verso, offset, photos_set, photos_perf, sources
 	}
 	subgraph file {
 		node[shape="note"]
 		README, screenshot, webcam, scanner, photo_mobile, 
-		lettrage, dessin, photos, fusion
+		lettrage, dessin, photos_perf, fusion, photos
 	}
 	
 	subgraph cluster_sets {
@@ -24,16 +25,16 @@ digraph {
 		dispositif -> degre48_git -> README
 		dispositif -> documentation
 		animation -> fusion
-		photos 
+		photos_set 
 		
 		subgraph cluster_perf {
 			label="performance(s)"
 			
-			performance -> { sources, photos, pre_doc, recto, verso, offset }
+			performance -> { sources, photos_perf, pre_doc, recto, verso, offset }
 			sources -> { 
-				screenshot, webcam, scanner, photo_mobile, lettrage, dessin
+				screenshot, webcam, scanner, photo_mobile, lettrage, dessin, photos
 			}
-			photos
+			photos_perf
 			
 		}		
 	}
