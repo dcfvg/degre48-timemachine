@@ -41,7 +41,6 @@ module.exports = function(app, io){
         var rectos  = getItemsList(perfPath+"/*recto*/","*.pdf");
         var predocs = getItemsList(perfPath+"/*pre-doc*/","*.*");
 
-
         var sourceType = []
 
         glob.sync(perfPath+"/*source*/*/").forEach(function (source) {
@@ -95,6 +94,9 @@ module.exports = function(app, io){
         var dispositifs       = getItemsList(setPath+"/*dispositif*/","*.*");
         var photos            = getItemsList(setPath+"/photos*/","*.*");
 
+        var versos  = getItemsList(setPath+"/*perf*-*/*verso*/","*.pdf");
+
+
         
         var readmeMd = fs.readFileSync(setPath + "/dispositif/degre48/README.md", 'utf8');
         var readme   = {
@@ -119,6 +121,10 @@ module.exports = function(app, io){
           ,photos           : photos
           ,photoIcon        : getRandItem(photos).thumb
           ,photoCount       : photos.length
+
+          ,versos        : versos
+          ,versoIcon     : getRandItem(versos).thumb
+          ,versoCount    : versos.length
 
           ,readme           : readme
 

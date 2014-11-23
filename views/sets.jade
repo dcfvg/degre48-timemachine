@@ -27,13 +27,22 @@ html
                 p.readme !{set.readme.html}
 
 
+              //- div.col-md-4.previewZone
+              //-   ol.stack
+              //-     each dispositif in set.dispositifs
+              //-       li(src="#{dispositif.thumb}")
+              //-   span.label.label-success #{set.dispositifCount}
+              //-   input(type="range" min="1" max="#{set.dispositifCount}" step="1" value="1")
+              //-   img.preview(src='#{set.dispositifIcon}')
+
               div.col-md-4.previewZone
                 ol.stack
-                  each dispositif in set.dispositifs
-                    li(src="#{dispositif.thumb}")
-                span.label.label-success #{set.dispositifCount}
-                input(type="range" min="1" max="#{set.dispositifCount}" step="1" value="1")
-                img.preview(src='#{set.dispositifIcon}')
+                  each verso in set.versos
+                    li(src="#{verso.thumb}")
+                span.label.label-success #{set.versoCount}
+                input(type="range" min="1" max="#{set.versoCount}" step="1" value="1")
+                img.preview(src='#{set.versoIcon}')
+
 
               div.col-md-4.previewZone
                 ol.stack
